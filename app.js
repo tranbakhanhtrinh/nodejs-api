@@ -52,9 +52,13 @@ app.use((error, req, res, next) => {
 
 const port = process.env.PORT || 8080;
 
-mongoose.connect("mongodb+srv://tranbakhanhtrinh:airblade08@nodejs-complete-guide.fqrra.mongodb.net/nodejs-api?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect("mongodb+srv://tranbakhanhtrinh:airblade08@nodejs-complete-guide.fqrra.mongodb.net/nodejs-api?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
     .then(() => {
-        app.listen(port, () => {
+        const server = app.listen(port, () => {
             console.log(`Server is running on port ${port}`);
         });
+        const io = require('./socket').init(server);
+        io.on('connection', socket => {
+            console.log("Client connected!")
+        })
     }).catch(err => console.log(err));
